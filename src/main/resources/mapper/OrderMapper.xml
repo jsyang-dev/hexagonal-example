@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.hexagonal.application.port.out.OrderRepository">
+
+    <resultMap id="orderItemResultMap" type="com.example.hexagonal.domain.OrderItem">
+        <result property="productName" column="product_name"/>
+        <result property="quantity" column="quantity"/>
+    </resultMap>
+
+    <resultMap id="orderResultMap" type="com.example.hexagonal.domain.Order">
+        <id property="id" column="id"/>
+        <result property="status" column="status"/>
+        <collection property="items" ofType="com.example.hexagonal.domain.OrderItem"
+                    select="selectItemsByOrderId" column="id"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.example.hexagonal.domain.Order" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO orders (status)
+        VALUES (#{status})
+    </insert>
+
+    <insert id="insertItems" parameterType="map">
+        INSERT INTO order_item (order_id, product_name, quantity)
+        VALUES
+        <foreach collection="items" item="item" separator=",">
+            (#{orderId}, #{item.productName}, #{item.quantity})
+        </foreach>
+    </insert>
+
+    <select id="selectById" resultMap="orderResultMap" parameterType="long">
+        SELECT id, status FROM orders WHERE id = #{id}
+    </select>
+
+    <select id="selectAll" resultMap="orderResultMap">
+        SELECT id, status FROM orders
+    </select>
+
+    <update id="update" parameterType="com.example.hexagonal.domain.Order">
+        UPDATE orders SET status = #{status} WHERE id = #{id}
+    </update>
+
+    <delete id="deleteItemsByOrderId" parameterType="long">
+        DELETE FROM order_item WHERE order_id = #{orderId}
+    </delete>
+
+    <select id="selectItemsByOrderId" resultMap="orderItemResultMap" parameterType="long">
+        SELECT product_name, quantity FROM order_item WHERE order_id = #{orderId}
+    </select>
+
+</mapper>
