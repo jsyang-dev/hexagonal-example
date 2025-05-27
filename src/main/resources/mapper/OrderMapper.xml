@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.hexagonal.application.port.out.OrderRepository">
+<mapper namespace="com.example.hexagonal.context.order.adapter.out.persistence.OrderMapper">
 
-    <resultMap id="orderItemResultMap" type="com.example.hexagonal.domain.OrderItem">
+    <resultMap id="orderItemResultMap" type="com.example.hexagonal.context.order.domain.OrderItem">
         <result property="productName" column="product_name"/>
         <result property="quantity" column="quantity"/>
     </resultMap>
 
-    <resultMap id="orderResultMap" type="com.example.hexagonal.domain.Order">
+    <resultMap id="orderResultMap" type="com.example.hexagonal.context.order.domain.Order">
         <id property="id" column="id"/>
         <result property="status" column="status"/>
-        <collection property="items" ofType="com.example.hexagonal.domain.OrderItem"
+        <collection property="items" ofType="com.example.hexagonal.context.order.domain.OrderItem"
                     select="selectItemsByOrderId" column="id"/>
     </resultMap>
 
-    <insert id="insert" parameterType="com.example.hexagonal.domain.Order" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" parameterType="com.example.hexagonal.context.order.domain.Order" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO orders (status)
         VALUES (#{status})
     </insert>
@@ -35,7 +35,7 @@
         SELECT id, status FROM orders
     </select>
 
-    <update id="update" parameterType="com.example.hexagonal.domain.Order">
+    <update id="update" parameterType="com.example.hexagonal.context.order.domain.Order">
         UPDATE orders SET status = #{status} WHERE id = #{id}
     </update>
 

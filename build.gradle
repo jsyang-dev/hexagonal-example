@@ -20,14 +20,38 @@ dependencies {
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     
+    // Lombok 의존성 추가
+    compileOnly 'org.projectlombok:lombok:1.18.32'
+    annotationProcessor 'org.projectlombok:lombok:1.18.32'
+
     runtimeOnly 'com.h2database:h2'
     
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.3'
     testImplementation 'io.rest-assured:rest-assured:5.4.0'
     testImplementation 'org.hamcrest:hamcrest:2.2'
+
+    // 테스트에서 lombok 사용 시
+    testCompileOnly 'org.projectlombok:lombok:1.18.32'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.32'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
-} 
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDir 'src/main/resources'
+            if (project.hasProperty('profile')) {
+                srcDir "src/main/resources-${project.profile}"
+            }
+        }
+    }
+}
+
+processResources {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+

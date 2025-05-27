@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.hexagonal.context.post.adapter.out.persistence.PostMasterMapper">
+
+    <resultMap id="postResultMap" type="com.example.hexagonal.context.post.domain.model.Post">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="author" column="author"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.example.hexagonal.context.post.domain.model.Post" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO post (title, content, author)
+        VALUES (#{title}, #{content}, #{author})
+    </insert>
+
+    <update id="update" parameterType="com.example.hexagonal.context.post.domain.model.Post">
+        UPDATE post
+        SET title = #{title}, content = #{content}, author = #{author}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        DELETE FROM post WHERE id = #{id}
+    </delete>
+
+    <select id="findById" resultMap="postResultMap" parameterType="long">
+        SELECT id, title, content, author FROM post WHERE id = #{id}
+    </select>
+
+    <select id="findAll" resultMap="postResultMap">
+        SELECT id, title, content, author FROM post
+    </select>
+
+</mapper> 

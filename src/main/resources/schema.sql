@@ -1,3 +1,7 @@
+DROP TABLE IF EXISTS order_item;
+DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS post;
+
 CREATE TABLE orders (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     status VARCHAR(20) NOT NULL
@@ -9,4 +13,11 @@ CREATE TABLE order_item (
     product_name VARCHAR(255) NOT NULL,
     quantity INT NOT NULL,
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
+);
+
+CREATE TABLE post (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    author VARCHAR(100) NOT NULL
 ); 
