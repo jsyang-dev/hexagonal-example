@@ -16,7 +16,7 @@ import static org.hamcrest.Matchers.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-@Import(TestKafkaConfig.class)
+@Import(TestEventConfig.class)
 class PostAcceptanceTest {
     @LocalServerPort
     int port;
