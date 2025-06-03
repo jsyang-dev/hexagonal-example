@@ -17,7 +17,7 @@ import static org.hamcrest.Matchers.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @Import(TestEventConfig.class)
-class PostAcceptanceeTest {
+class PostAcceptanceTest {
     @LocalServerPort
     int port;
 
