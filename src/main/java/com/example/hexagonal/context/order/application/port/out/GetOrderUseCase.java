@@ -1,4 +1,4 @@
-package com.example.hexagonal.context.order.application.port.in;
+package com.example.hexagonal.context.order.application.port.out;
 
 import com.example.hexagonal.context.order.domain.Order;
 

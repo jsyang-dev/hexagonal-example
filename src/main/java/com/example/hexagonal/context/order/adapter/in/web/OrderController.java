@@ -1,7 +1,7 @@
 package com.example.hexagonal.context.order.adapter.in.web;
 
 import com.example.hexagonal.context.order.application.port.in.CreateOrderUsecase;
-import com.example.hexagonal.context.order.application.port.in.GetOrderUseCase;
+import com.example.hexagonal.context.order.application.port.out.GetOrderUseCase;
 import com.example.hexagonal.context.order.application.port.in.ListOrderUseCase;
 import com.example.hexagonal.context.order.application.port.in.UpdateOrderUseCase;
 import com.example.hexagonal.context.order.domain.Order;
