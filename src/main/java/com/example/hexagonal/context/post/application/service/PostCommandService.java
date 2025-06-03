@@ -1,7 +1,7 @@
 package com.example.hexagonal.context.post.application.service;
 
 import com.example.hexagonal.context.post.domain.model.Post;
-import com.example.hexagonal.context.post.adapter.out.persistence.PostMasterMapper;
+import com.example.hexagonal.context.post.adapter.out.persistenc.PostMasterMapper;
 import com.example.hexagonal.context.post.application.port.in.PostCommandUseCase;
 import com.example.hexagonal.context.post.application.port.out.PostEventPublisherPort;
 import org.springframework.stereotype.Service;
