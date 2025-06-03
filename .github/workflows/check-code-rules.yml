@@ -1,0 +1,44 @@
+name: 패키지 및 클래스명 룰 체크
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  check-code-rules:
+    runs-on: ubuntu-latest
+    steps:
+      - name: n8n 워크플로우 호출
+        id: call-n8n
+        run: |
+          response=$(curl -s -X POST https://a1a9-116-33-11-45.ngrok-free.app/webhook/decedbb5-be71-4d57-a8eb-55fc5d7c8598 \
+            -H "Content-Type: application/json" \
+            -d '{
+              "owner": "${{ github.repository_owner }}",
+              "repo": "${{ github.event.repository.name }}",
+              "pullNumber": "${{ github.event.pull_request.number }}"
+            }')
+
+          echo "Response: $response"
+
+          comment=$(echo "$response" | jq -r '.comment')
+          passed=$(echo "$response" | jq -r '.passed')
+
+          echo "comment<<EOF" >> $GITHUB_ENV
+          echo "$comment" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+          echo "passed=$passed" >> $GITHUB_OUTPUT
+
+      - name: PR 코멘트 작성
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: ${{ env.comment }}
+
+      - name: 머지 차단
+        if: steps.call-n8n.outputs.passed != 'true'
+        run: |
+          echo "❌ PR 룰 위반 감지됨. 머지 차단 중..."
+          exit 1
