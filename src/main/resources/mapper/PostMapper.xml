@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.hexagonal.context.post.adapter.out.persistence.PostMasterMapper">
+<mapper namespace="com.example.hexagonal.context.post.adapter.out.persistenc.PostMasterMapper">
 
     <resultMap id="postResultMap" type="com.example.hexagonal.context.post.domain.model.Post">
         <id property="id" column="id"/>
