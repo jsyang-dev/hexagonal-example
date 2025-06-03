@@ -36,4 +36,9 @@ class OrderTest {
         assertThat(order.getItems().get(1).getProductName()).isEqualTo("상품2");
         assertThat(order.getItems().get(1).getQuantity()).isEqualTo(2);
     }
+
+    @Test
+    void test() {
+
+    }
 } 
