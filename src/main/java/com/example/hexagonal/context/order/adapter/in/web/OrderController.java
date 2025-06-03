@@ -1,6 +1,6 @@
 package com.example.hexagonal.context.order.adapter.in.web;
 
-import com.example.hexagonal.context.order.application.port.in.CreateOrderUseCase;
+import com.example.hexagonal.context.order.application.port.in.CreateOrderUsecase;
 import com.example.hexagonal.context.order.application.port.in.GetOrderUseCase;
 import com.example.hexagonal.context.order.application.port.in.ListOrderUseCase;
 import com.example.hexagonal.context.order.application.port.in.UpdateOrderUseCase;
@@ -13,13 +13,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
-    private final CreateOrderUseCase createOrderUseCase;
+    private final CreateOrderUsecase createOrderUseCase;
     private final GetOrderUseCase getOrderUseCase;
     private final ListOrderUseCase listOrderUseCase;
     private final UpdateOrderUseCase updateOrderUseCase;
 
     public OrderController(
-        CreateOrderUseCase createOrderUseCase,
+        CreateOrderUsecase createOrderUseCase,
         GetOrderUseCase getOrderUseCase,
         ListOrderUseCase listOrderUseCase,
         UpdateOrderUseCase updateOrderUseCase

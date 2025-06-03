@@ -1,6 +1,6 @@
 package com.example.hexagonal.context.order.application.service;
 
-import com.example.hexagonal.context.order.application.port.in.CreateOrderUseCase;
+import com.example.hexagonal.context.order.application.port.in.CreateOrderUsecase;
 import com.example.hexagonal.context.order.application.port.in.GetOrderUseCase;
 import com.example.hexagonal.context.order.application.port.in.ListOrderUseCase;
 import com.example.hexagonal.context.order.application.port.in.UpdateOrderUseCase;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class OrderService implements CreateOrderUseCase, GetOrderUseCase, ListOrderUseCase, UpdateOrderUseCase {
+public class OrderService implements CreateOrderUsecase, GetOrderUseCase, ListOrderUseCase, UpdateOrderUseCase {
     private final OrderMapper orderMapper;
 
     public OrderService(OrderMapper orderMapper) {
