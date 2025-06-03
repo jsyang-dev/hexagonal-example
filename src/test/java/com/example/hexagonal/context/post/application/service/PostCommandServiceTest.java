@@ -5,7 +5,7 @@ import static org.mockito.Mockito.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.example.hexagonal.context.post.adapter.out.persistenc.PostMasterMapper;
+import com.example.hexagonal.context.post.adapter.out.persistence.PostMasterMapper;
 import com.example.hexagonal.context.post.application.port.out.PostEventPublisherPort;
 import com.example.hexagonal.context.post.domain.model.Post;
 

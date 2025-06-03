@@ -1,4 +1,4 @@
-package com.example.hexagonal.context.post.adapter.in.controller;
+package com.example.hexagonal.context.post.adapter.in.web;
 
 import com.example.hexagonal.context.post.domain.model.Post;
 import com.example.hexagonal.context.post.application.port.in.PostCommandUseCase;

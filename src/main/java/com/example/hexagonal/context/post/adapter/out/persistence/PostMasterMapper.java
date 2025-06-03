@@ -1,4 +1,4 @@
-package com.example.hexagonal.context.post.adapter.out.persistenc;
+package com.example.hexagonal.context.post.adapter.out.persistence;
 
 import com.example.hexagonal.context.post.domain.model.Post;
 import org.apache.ibatis.annotations.Mapper;
