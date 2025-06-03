@@ -1,7 +1,7 @@
 package com.example.hexagonal.context.order.adapter.in.web;
 
-import com.example.hexagonal.context.order.application.port.in.CreateOrderUsecase;
-import com.example.hexagonal.context.order.application.port.out.GetOrderUseCase;
+import com.example.hexagonal.context.order.application.port.in.CreateOrderCommandUseCase;
+import com.example.hexagonal.context.order.application.port.out.GetOrderQueryUseCase;
 import com.example.hexagonal.context.order.application.port.in.ListOrderUseCase;
 import com.example.hexagonal.context.order.application.port.in.UpdateOrderUseCase;
 import com.example.hexagonal.context.order.domain.Order;
@@ -13,19 +13,19 @@ import java.util.List;
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
-    private final CreateOrderUsecase createOrderUseCase;
-    private final GetOrderUseCase getOrderUseCase;
+    private final CreateOrderCommandUseCase createOrderUseCase;
+    private final GetOrderQueryUseCase getOrderQueryUseCase;
     private final ListOrderUseCase listOrderUseCase;
     private final UpdateOrderUseCase updateOrderUseCase;
 
     public OrderController(
-        CreateOrderUsecase createOrderUseCase,
-        GetOrderUseCase getOrderUseCase,
+        CreateOrderCommandUseCase createOrderUseCase,
+        GetOrderQueryUseCase getOrderQueryUseCase,
         ListOrderUseCase listOrderUseCase,
         UpdateOrderUseCase updateOrderUseCase
     ) {
         this.createOrderUseCase = createOrderUseCase;
-        this.getOrderUseCase = getOrderUseCase;
+        this.getOrderQueryUseCase = getOrderQueryUseCase;
         this.listOrderUseCase = listOrderUseCase;
         this.updateOrderUseCase = updateOrderUseCase;
     }
@@ -37,7 +37,7 @@ public class OrderController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Order> getOrder(@PathVariable Long id) {
-        Order order = getOrderUseCase.getOrder(id);
+        Order order = getOrderQueryUseCase.getOrder(id);
         return order != null ? ResponseEntity.ok(order) : ResponseEntity.notFound().build();
     }
 

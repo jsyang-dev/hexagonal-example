@@ -4,6 +4,6 @@ import com.example.hexagonal.context.order.domain.Order;
 import com.example.hexagonal.context.order.domain.OrderItem;
 import java.util.List;
 
-public interface CreateOrderUsecase {
+public interface CreateOrderCommandUseCase {
     Order createOrder(List<OrderItem> items);
 } 
