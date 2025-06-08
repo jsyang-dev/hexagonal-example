@@ -1,0 +1,59 @@
+name: PR 코드 리뷰
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  code-review:
+    if: |
+      github.event.issue.pull_request != null &&
+      contains(github.event.comment.body, '#코드리뷰')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: n8n 워크플로우 호출
+        id: call-n8n
+        run: |
+          response=$(curl -s -X POST https://5252-116-33-11-45.ngrok-free.app/webhook/ec464db8-8d7b-47d6-bef3-b19a2aa7f045 \
+            -H "Content-Type: application/json" \
+            -d '{
+              "owner": "${{ github.repository_owner }}",
+              "repo": "${{ github.event.repository.name }}",
+              "pullNumber": "${{ github.event.issue.number }}"
+            }')
+
+          echo "$response" > result.json
+
+      - name: 코드 리뷰 결과 출력
+        run: cat result.json
+
+      - name: 마지막 커밋의 SHA 가져오기
+        id: get-sha
+        run: |
+          SHA=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.issue.number }} \
+            | jq -r '.head.sha')
+          echo "sha=$SHA" >> $GITHUB_OUTPUT
+
+      - name: PR 줄별 코멘트 작성
+        run: |
+          reviews=$(jq -c '.reviews[]' result.json)
+          for review in $reviews; do
+            file=$(echo "$review" | jq -r '.file')
+            line=$(echo "$review" | jq -r '.line')
+            comment=$(echo "$review" | jq -r '.comment')
+            sha="${{ steps.get-sha.outputs.sha }}"
+          
+            echo "➤ Posting comment on $file:$line"
+          
+            curl -s -X POST https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.issue.number }}/comments \
+              -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Content-Type: application/json" \
+              -d "$(jq -n \
+                --arg body "$comment" \
+                --arg commit_id "$sha" \
+                --arg path "$file" \
+                --argjson line $line \
+                '{body: $body, commit_id: $commit_id, path: $path, side: "RIGHT", line: $line}')"
+          done
