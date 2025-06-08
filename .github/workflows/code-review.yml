@@ -38,7 +38,8 @@ jobs:
 
       - name: PR 줄별 코멘트 작성
         run: |
-          reviews=$(jq -c '.reviews[]' result.json)
+          reviews=$(jq -c '.reviews // [] | .[]' result.json)
+          
           for review in $reviews; do
             file=$(echo "$review" | jq -r '.file')
             line=$(echo "$review" | jq -r '.line')
@@ -47,6 +48,7 @@ jobs:
           
             echo "➤ Posting comment on $file:$line"
           
+            # 안전하게 JSON 생성
             json=$(jq -n \
               --arg commit_id "$sha" \
               --arg path "$file" \
@@ -59,6 +61,7 @@ jobs:
             echo "📤 Request JSON:"
             echo "$json"
           
+            # API 호출 및 응답 출력
             response=$(curl -s -w "\n🟢 HTTP %{http_code}\n" -X POST https://api.github.com/repos/jsyang-dev/hexagonal-example/pulls/1/comments \
               -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
               -H "Content-Type: application/json" \
