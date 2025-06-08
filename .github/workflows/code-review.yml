@@ -47,13 +47,19 @@ jobs:
           
             echo "➤ Posting comment on $file:$line"
           
+            json=$(jq -n \
+              --arg commit_id "$sha" \
+              --arg path "$file" \
+              --arg side "RIGHT" \
+              --argjson line "$line" \
+              --arg body "$(echo "$comment" | jq -Rs .)" \
+              '{body: ($body | fromjson), commit_id: $commit_id, path: $path, side: $side, line: $line}'
+            )
+          
+            echo "$json"
+          
             curl -s -X POST https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.issue.number }}/comments \
               -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
               -H "Content-Type: application/json" \
-              -d "$(jq -n \
-                --arg body "$comment" \
-                --arg commit_id "$sha" \
-                --arg path "$file" \
-                --argjson line $line \
-                '{body: $body, commit_id: $commit_id, path: $path, side: "RIGHT", line: $line}')"
+              -d "$json"
           done
