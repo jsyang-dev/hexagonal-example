@@ -11,7 +11,7 @@ jobs:
       - name: n8n 워크플로우 호출
         id: call-n8n
         run: |
-          response=$(curl -s -X POST https://a1a9-116-33-11-45.ngrok-free.app/webhook/decedbb5-be71-4d57-a8eb-55fc5d7c8598 \
+          response=$(curl -s -X POST https://5252-116-33-11-45.ngrok-free.app/webhook/decedbb5-be71-4d57-a8eb-55fc5d7c8598 \
             -H "Content-Type: application/json" \
             -d '{
               "owner": "${{ github.repository_owner }}",
