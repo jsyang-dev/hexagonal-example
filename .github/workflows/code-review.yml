@@ -1,4 +1,4 @@
-name: PR 코드 리뷰
+name: 코드 리뷰
 
 on:
   issue_comment:
@@ -43,7 +43,7 @@ jobs:
             file=$(echo "$review" | jq -r '.file')
             line=$(echo "$review" | jq -r '.line')
             comment=$(echo "$review" | jq -r '.comment')
-            sha="${{ steps.get-sha.outputs.sha }}"
+            sha="0808305814fe44132d5d200f8c4ff9bfb85596a8"
           
             echo "➤ Posting comment on $file:$line"
           
@@ -51,15 +51,15 @@ jobs:
               --arg commit_id "$sha" \
               --arg path "$file" \
               --arg side "RIGHT" \
+              --arg body "$comment" \
               --argjson line "$line" \
-              --arg body "$(echo "$comment" | jq -Rs .)" \
-              '{body: ($body | fromjson), commit_id: $commit_id, path: $path, side: $side, line: $line}'
+              '{body: $body, commit_id: $commit_id, path: $path, side: $side, line: $line}'
             )
           
             echo "📤 Request JSON:"
             echo "$json"
           
-            response=$(curl -s -w "\n🟢 HTTP %{http_code}\n" -X POST https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.issue.number }}/comments \
+            response=$(curl -s -w "\n🟢 HTTP %{http_code}\n" -X POST https://api.github.com/repos/jsyang-dev/hexagonal-example/pulls/1/comments \
               -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
               -H "Content-Type: application/json" \
               -d "$json")
