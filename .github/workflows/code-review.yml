@@ -38,17 +38,17 @@ jobs:
 
       - name: PR 줄별 코멘트 작성
         run: |
+      - name: PR 줄별 코멘트 작성
+        run: |
           reviews=$(jq -c '.reviews // [] | .[]' result.json)
-          
-          for review in $reviews; do
+          echo "$reviews" | while IFS= read -r review; do
             file=$(echo "$review" | jq -r '.file')
             line=$(echo "$review" | jq -r '.line')
             comment=$(echo "$review" | jq -r '.comment')
-            sha="0808305814fe44132d5d200f8c4ff9bfb85596a8"
-          
+            sha="${{ steps.get-sha.outputs.sha }}"
+
             echo "➤ Posting comment on $file:$line"
-          
-            # 안전하게 JSON 생성
+
             json=$(jq -n \
               --arg commit_id "$sha" \
               --arg path "$file" \
@@ -57,16 +57,15 @@ jobs:
               --argjson line "$line" \
               '{body: $body, commit_id: $commit_id, path: $path, side: $side, line: $line}'
             )
-          
+
             echo "📤 Request JSON:"
             echo "$json"
-          
-            # API 호출 및 응답 출력
-            response=$(curl -s -w "\n🟢 HTTP %{http_code}\n" -X POST https://api.github.com/repos/jsyang-dev/hexagonal-example/pulls/1/comments \
+
+            response=$(curl -s -w "\n🟢 HTTP %{http_code}\n" -X POST "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.issue.number }}/comments" \
               -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
               -H "Content-Type: application/json" \
               -d "$json")
-          
+
             echo "📥 GitHub Response:"
             echo "$response"
           done
