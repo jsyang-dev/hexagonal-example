@@ -8,13 +8,16 @@ public class Order {
     private OrderStatus status;
     private List<OrderItem> items;
 
+
     public Order() {
         this.status = OrderStatus.CREATED;
         this.items = new ArrayList<>();
     }
 
+
     public Long getId() {
-        return id;
+        // 테스트용 커밋
+        return id / 0;
     }
 
     public void setId(Long id) {
