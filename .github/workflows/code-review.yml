@@ -12,10 +12,37 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: 마지막 커밋의 SHA 가져오기
+        id: get-sha
+        run: |
+          SHA=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.issue.number }} \
+            | jq -r '.head.sha')
+          echo "sha=$SHA" >> $GITHUB_OUTPUT
+
+      - name: Check Run 생성 (pending)
+        id: create-check
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const check = await github.checks.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: "코드 리뷰",
+              head_sha: "${{ steps.get-sha.outputs.sha }}",
+              status: "in_progress",
+              started_at: new Date().toISOString(),
+              output: {
+                title: "코드 리뷰 진행 중",
+                summary: "코드 리뷰를 실행하고 있습니다."
+              }
+            });
+            core.setOutput("check_id", check.data.id);
+
       - name: n8n 워크플로우 호출
         id: call-n8n
         run: |
-          response=$(curl -s -X POST https://030f-2001-2d8-f212-c840-e4c8-c3df-c05b-86e.ngrok-free.app/webhook/ec464db8-8d7b-47d6-bef3-b19a2aa7f045 \
+          response=$(curl -s -X POST https://8013-116-33-11-45.ngrok-free.app/webhook/ec464db8-8d7b-47d6-bef3-b19a2aa7f045 \
             -H "Content-Type: application/json" \
             -d '{
               "owner": "${{ github.repository_owner }}",
@@ -27,14 +54,6 @@ jobs:
 
       - name: 코드 리뷰 결과 출력
         run: cat result.json
-
-      - name: 마지막 커밋의 SHA 가져오기
-        id: get-sha
-        run: |
-          SHA=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.issue.number }} \
-            | jq -r '.head.sha')
-          echo "sha=$SHA" >> $GITHUB_OUTPUT
 
       - name: 라인별 코멘트 작성
         run: |
@@ -77,3 +96,41 @@ jobs:
             echo "📥 GitHub Response:"
             echo "$response"
           done
+
+      # ---- 성공 시 Check Run 완료 (success) ----
+      - name: Check Run 완료 (success)
+        if: ${{ success() }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.checks.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              check_run_id: ${{ steps.create-check.outputs.check_id }},
+              status: "completed",
+              conclusion: "success",
+              completed_at: new Date().toISOString(),
+              output: {
+                title: "코드 리뷰 완료",
+                summary: "코드 리뷰가 성공적으로 끝났습니다."
+              }
+            });
+
+      # ---- 실패 시 Check Run 완료 (failure) ----
+      - name: Check Run 완료 (failure)
+        if: ${{ failure() }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.checks.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              check_run_id: ${{ steps.create-check.outputs.check_id }},
+              status: "completed",
+              conclusion: "failure",
+              completed_at: new Date().toISOString(),
+              output: {
+                title: "코드 리뷰 실패",
+                summary: "코드 리뷰 도중 오류가 발생했습니다."
+              }
+            });
